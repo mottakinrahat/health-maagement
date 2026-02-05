@@ -2,11 +2,13 @@ import express from "express";
 import { AdminController } from "./admin.controller";
 import validateRequest from "../../middleWares/validateRequest";
 import { AdminValidation } from "./admin.validation";
+import { auth } from "../../middleWares/auth";
+import { UserRole } from "../../../../generated/prisma";
 const router = express.Router();
 
 
-router.get("/", AdminController.getAllAdminFromDB);
-router.get("/:id", AdminController.getSingleAdmin);
+router.get("/",auth(UserRole.ADMIN,UserRole.SUPER_ADMIN), AdminController.getAllAdminFromDB);
+router.get("/:id",auth(UserRole.ADMIN,UserRole.SUPER_ADMIN), AdminController.getSingleAdmin);
 router.patch(
   "/:id",
   validateRequest(AdminValidation.updateAdminZodSchema),

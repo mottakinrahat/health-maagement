@@ -1,12 +1,13 @@
 import express from "express";
 import { UserController } from "./user.controller";
 import { auth } from "../../middleWares/auth";
+import { UserRole } from "../../../../generated/prisma";
 
 
 const router = express.Router();
 
 
 
-router.post("/",  UserController.createAdminUser);//
-router.get("/", UserController.createAdminUser);
+router.post("/",auth(UserRole.ADMIN,UserRole.SUPER_ADMIN),  UserController.createAdminUser);//
+router.get("/",auth(UserRole.ADMIN,UserRole.SUPER_ADMIN), UserController.createAdminUser);
 export const userRoutes = router;

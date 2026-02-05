@@ -1,3 +1,4 @@
+import { UserFindUniqueOrThrowArgs } from './../../../../generated/prisma/index.d';
 
 import generateToken, { verifyToken } from "../../../helpers/jwtHelpers";
 import prisma from "../../../shared/prisma";
@@ -82,8 +83,17 @@ const refreshToken = async (token: string) => {
     needPasswordChange: userData?.needPasswordChange,
   };
 };
+const changePassword=async(user:any,payload:any)=>{
+    const {oldPassword,newPassword}=payload;
 
+    const userData=prisma.user.findFirstOrThrow({
+      where:{
+        email:user.email,
+      }
+    })
+
+}
 export const authServices = {
   loginUser,
-  refreshToken,
+  refreshToken,changePassword
 };

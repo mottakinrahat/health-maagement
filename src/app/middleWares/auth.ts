@@ -18,6 +18,7 @@ export const auth = (...roles: string[]) => {
         throw new Error("You are not authorized");
       }
       const verifiedUser = await verifyToken(token, config.jwt.jwt_secret as Secret);
+      req.user=verifiedUser;
       if (roles.length && !roles.includes(verifiedUser.role)) {
         throw new Error("You are not authorized for this role");
       }
