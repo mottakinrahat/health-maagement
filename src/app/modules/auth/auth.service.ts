@@ -1,4 +1,4 @@
-import { UserFindUniqueOrThrowArgs, UserRole } from "./../../../../generated/prisma/index.d";
+import { UserRole } from "./../../../../generated/prisma/index.d";
 
 import generateToken, { verifyToken } from "../../../helpers/jwtHelpers";
 import prisma from "../../../shared/prisma";
@@ -7,6 +7,7 @@ import bcrypt from "bcrypt";
 import { UserStatus } from "../../../../generated/prisma";
 import { Secret } from "jsonwebtoken";
 import config from "../../../config";
+import emailSender from "./emailSender";
 
 const loginUser = async (payload: TLogInUser) => {
   const { email, password } = payload;
@@ -95,7 +96,7 @@ const changePassword = async (user: any, payload: any) => {
   const userData = await prisma.user.findFirstOrThrow({
     where: {
       email: user.email,
-      status:UserStatus.ACTIVE
+      status: UserStatus.ACTIVE,
     },
   });
   const isCorrectPassword = await bcrypt.compare(
@@ -121,8 +122,63 @@ const changePassword = async (user: any, payload: any) => {
   };
 };
 
+const forgotPassword = async (payload: { email: string }) => {
+  const { email } = payload;
+
+  const userData = await prisma.user.findUniqueOrThrow({
+    where: {
+      email: email,
+      status: UserStatus.ACTIVE,
+    },
+  });
+  const resetPassToken = generateToken(
+    { email: userData.email, role: userData.role },
+    process.env.reset_pass_token as Secret,
+    process.env.expires_in as string,
+  );
+  const resetPassLink =
+    process.env.RESET_PASS_LINK +
+    `?userId=${userData.id}&token=${resetPassToken}`;
+  await emailSender(
+    userData?.email,
+    `<div>
+    <p>Click the link below to reset your password:</p><a href="${resetPassLink}">
+    <button>Reset Password</button>
+    </a></div>`,
+  );
+
+  //http://localhost:3000/reset-pass?email=ancsddf@gmail.com&token=dhfsdfidshf
+};
+
+const resetPassword = async (
+  token: string,
+  payload: { id: string; password: string },
+) => {
+  const isValidToken = await verifyToken(
+    token,
+    process.env.reset_pass_token as Secret,
+  );
+  if(!isValidToken){
+    throw new Error("Invalid or expired token");
+  }
+  const hashPassword=bcrypt.hashSync(payload.password,12);
+
+  const updatePassword=await prisma.user.update({
+    where: {
+      email: isValidToken.email
+    },
+    data: {
+      password: hashPassword
+    }
+  });
+  return {
+    message: "Password reset successfully"
+  };
+};
 export const authServices = {
   loginUser,
   refreshToken,
   changePassword,
+  forgotPassword,
+  resetPassword,
 };
