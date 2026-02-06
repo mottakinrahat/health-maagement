@@ -1,4 +1,4 @@
-import { UserFindUniqueOrThrowArgs } from './../../../../generated/prisma/index.d';
+import { UserFindUniqueOrThrowArgs, UserRole } from "./../../../../generated/prisma/index.d";
 
 import generateToken, { verifyToken } from "../../../helpers/jwtHelpers";
 import prisma from "../../../shared/prisma";
@@ -15,7 +15,7 @@ const loginUser = async (payload: TLogInUser) => {
   const userData = await prisma.user.findUniqueOrThrow({
     where: {
       email: email,
-      status: UserStatus.ACTIVE
+      status: UserStatus.ACTIVE,
     },
   });
 
@@ -32,7 +32,7 @@ const loginUser = async (payload: TLogInUser) => {
       role: userData.role,
     },
     config.jwt.jwt_secret as Secret,
-    config.jwt.expires_in as string
+    config.jwt.expires_in as string,
   );
   const refreshToken = generateToken(
     {
@@ -40,7 +40,7 @@ const loginUser = async (payload: TLogInUser) => {
       role: userData.role,
     },
     config.jwt.refresh_token_secret as Secret,
-    config.jwt.refresh_token_expires_in as string
+    config.jwt.refresh_token_expires_in as string,
   );
 
   // Fixed logging
@@ -53,47 +53,76 @@ const loginUser = async (payload: TLogInUser) => {
 };
 
 const refreshToken = async (token: string) => {
-
   let decodedData;
   try {
-    decodedData = await verifyToken(token, config.jwt.refresh_token_secret as Secret);
+    decodedData = await verifyToken(
+      token,
+      config.jwt.refresh_token_secret as Secret,
+    );
   } catch (error) {
     console.error("JWT verification failed:", error);
     throw new Error("You are not authorized ");
   }
-  if (typeof decodedData !== "object" || !decodedData || !("email" in decodedData)) {
+  if (
+    typeof decodedData !== "object" ||
+    !decodedData ||
+    !("email" in decodedData)
+  ) {
     throw new Error("Invalid token payload");
   }
   const userData = await prisma.user.findUniqueOrThrow({
     where: {
       email: decodedData?.email,
-      status: UserStatus.ACTIVE
+      status: UserStatus.ACTIVE,
     },
   });
-   const accessToken = generateToken(
+  const accessToken = generateToken(
     {
       email: userData?.email,
       role: userData?.role,
     },
     process.env.jwt_secret as Secret,
-    process.env.expires_in as string
+    process.env.expires_in as string,
   );
-   return {
+  return {
     accessToken,
     needPasswordChange: userData?.needPasswordChange,
   };
 };
-const changePassword=async(user:any,payload:any)=>{
-    const {oldPassword,newPassword}=payload;
+const changePassword = async (user: any, payload: any) => {
+  const { oldPassword, newPassword } = payload;
 
-    const userData=prisma.user.findFirstOrThrow({
-      where:{
-        email:user.email,
-      }
-    })
+  const userData = await prisma.user.findFirstOrThrow({
+    where: {
+      email: user.email,
+      status:UserStatus.ACTIVE
+    },
+  });
+  const isCorrectPassword = await bcrypt.compare(
+    oldPassword,
+    userData.password,
+  );
+  if (!isCorrectPassword) {
+    throw new Error("Invalid password");
+  }
 
-}
+  await prisma.user.update({
+    where: {
+      email: user.email,
+    },
+    data: {
+      password: await bcrypt.hash(newPassword, 12),
+      needPasswordChange: false,
+    },
+  });
+
+  return {
+    message: "Password changed successfully",
+  };
+};
+
 export const authServices = {
   loginUser,
-  refreshToken,changePassword
+  refreshToken,
+  changePassword,
 };
