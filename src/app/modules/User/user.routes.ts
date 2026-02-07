@@ -12,12 +12,12 @@ const storage = multer.diskStorage({
     cb(null, '/uploads')
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname)
+    cb(null, file.originalname) //original file name
   }
 })
 
 const upload = multer({ storage: storage })
 
-router.post("/",auth(UserRole.ADMIN,UserRole.SUPER_ADMIN),  UserController.createAdminUser);//
+router.post("/",auth(UserRole.ADMIN,UserRole.SUPER_ADMIN),upload.single('file'),  UserController.createAdminUser);//
 router.get("/",auth(UserRole.ADMIN,UserRole.SUPER_ADMIN), UserController.createAdminUser);
 export const userRoutes = router;
