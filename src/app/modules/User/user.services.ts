@@ -1,7 +1,14 @@
+import { path } from 'path';
 import { PrismaClient, UserRole } from "../../../../generated/prisma";
 import * as bcrypt from "bcrypt";
+import { fileUploader } from "../../../helpers/fileUploader";
 const prisma = new PrismaClient();
 const createAdmin = async (payload: any) => {
+const file=payload.file;
+if(file){
+  const uploadToCloudinary=await fileUploader.uploadToCloudinary(file?.path);
+  payload.body.data.admin.profilePhoto=uploadToCloudinary?.url;
+}
   const hashedPassword: string = await bcrypt.hash(payload.password, 12);
   const userData = {
     email: payload.admin.email,
