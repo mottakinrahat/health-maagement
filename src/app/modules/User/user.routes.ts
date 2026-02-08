@@ -20,9 +20,21 @@ router.post(
     return UserController.createAdminUser(req, res);
   },
 ); //
+
+router.post(
+  "/create-doctor",
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  fileUploader.upload.single("file"),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = UserValidation.createDoctorValidationSchema.parse(
+      JSON.parse(req.body.data),
+    );
+    return UserController.createDoctor(req, res);
+  },
+); //
 router.get(
   "/",
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  UserController.createAdminUser,
+  UserController.createDoctor,
 );
 export const userRoutes = router;

@@ -18,7 +18,22 @@ try {
     });
 }
 };
-
+const createDoctor = async (req:Request,res:Response) => {
+try {
+    const result = await UserServices.createDoctorIntoDB(req);
+    res.status(200).json({
+        success: true,
+        message: "Doctor created successfully",
+        data: result
+    });
+} catch (error) {
+    res.status(500).json({
+        success: false,
+        message: "Failed to create Doctor",
+        error: error
+    });
+}
+};
 export const UserController = {
-  createAdminUser
+  createAdminUser,createDoctor
 };
