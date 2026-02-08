@@ -1,5 +1,6 @@
 import multer from "multer";
 import path from "path";
+import fs from "fs";
 import { v2 as cloudinary } from "cloudinary";
 
 const storage = multer.diskStorage({
@@ -20,11 +21,20 @@ cloudinary.config({
 });
 
 const uploadToCloudinary = async (filePath: string) => {
-  const result = await cloudinary.uploader.upload(filePath, {
-    folder: "uploads",
-  });
+  try {
+    const result = await cloudinary.uploader.upload(filePath, {
+      folder: "uploads",
+    });
+    fs.unlinkSync(filePath);
 
-  return { url: result.secure_url };
+    return { url: result.secure_url };
+  } catch (error) {
+    // optional: still try to clean up if upload fails
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+    throw error;
+  }
 };
 
 export const fileUploader = {
