@@ -44,7 +44,6 @@ router.post(
 ); //
 router.get(
   "/",
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  UserController.createDoctor,
+  UserController.getAllUser,
 );
 export const userRoutes = router;

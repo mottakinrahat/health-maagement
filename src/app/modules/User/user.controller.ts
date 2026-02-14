@@ -1,5 +1,10 @@
 import { Request, Response } from "express";
 import { UserServices } from "./user.services";
+import { catchAsync } from "../../../helpers/trycatch";
+import { sendResponse } from "../../../helpers/sendResponse";
+import { pick } from "../../../shared/pick";
+import { userFilterableFields } from "./user.constant";
+import status from "http-status";
 
 const createAdminUser = async (req:Request,res:Response) => {
 
@@ -51,6 +56,20 @@ try {
     });
 }
 };
+
+const getAllUser = catchAsync(async (req, res, next) => {
+  const filter = pick(req.query, userFilterableFields);
+  const options = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]);
+  const result = await UserServices.getAllUserFromDB(filter, options);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: status.OK,
+    message: "Admin data retrieved successfully",
+    meta: result?.meta,
+    data: result?.data,
+  });
+});
 export const UserController = {
-  createAdminUser,createDoctor,createPatient
+  createAdminUser,createDoctor,createPatient,getAllUser
 };
