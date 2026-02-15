@@ -65,7 +65,7 @@ const getAllUser = catchAsync(async (req, res, next) => {
   sendResponse(res, {
     success: true,
     statusCode: status.OK,
-    message: "Admin data retrieved successfully",
+    message: "User data retrieved successfully",
     meta: result?.meta,
     data: result?.data,
   });

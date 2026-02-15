@@ -1,3 +1,4 @@
+
 import { Admin, Prisma, UserStatus } from "../../../../generated/prisma";
 import { calculatePagination } from "../../../helpers/paginationHelpers";
 import prisma from "../../../shared/prisma";
@@ -20,7 +21,6 @@ const getAllAdmin = async (params: IAdminFilterRequest, options: IPaginationOpti
       })),
     });
   }
-
   if (Object.keys(filterData).length > 0) {
     andConditions.push({
       AND: Object.keys(filterData).map((key) => ({

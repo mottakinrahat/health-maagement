@@ -89,9 +89,9 @@ const createPatientIntoDB = async (req: any) => {
 const getAllUserFromDB = async (params: any, options: IPaginationOptions) => {
   const { page, limit, sortBy, sortOrder, skip } = calculatePagination(options);
   const { searchTerm, ...filterData } = params;
-
   const andConditions: Prisma.UserWhereInput[] = [];
-  if (params.searchTerm) {
+  console.log(filterData);
+  if (params?.searchTerm) {
     andConditions.push({
       OR: userSearchableFields.map((field) => ({
         [field]: {
@@ -111,6 +111,7 @@ const getAllUserFromDB = async (params: any, options: IPaginationOptions) => {
       })),
     });
   }
+
   // Apply the filter with the search term
   const whereConditions: Prisma.UserWhereInput =
     andConditions.length > 0 ? { AND: andConditions } : {}; // Ensure consistent type
