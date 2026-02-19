@@ -43,7 +43,9 @@ router.post(
   },
 ); //
 router.get(
-  "/",
+  "/",auth(UserRole.SUPER_ADMIN,UserRole.ADMIN),
   UserController.getAllUser,
 );
+
+router.patch('/id:/status',UserController.updateUserData)
 export const userRoutes = router;

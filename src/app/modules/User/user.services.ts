@@ -120,25 +120,24 @@ const getAllUserFromDB = async (params: any, options: IPaginationOptions) => {
     skip,
     take: limit,
     orderBy:
-      sortBy && sortOrder ? [{ [sortBy]: sortOrder }] : [{ createdAt: "asc" },], 
-      select:{
-        id:true,
-        email:true,
-        role:true,
-        needPasswordChange:true,
-        status:true,
-        createdAt:true,
-        updatedAt:true,
-        admin:true,
-        doctor:true,
-        patient:true
-        // Fallback to 'name' for sorting if not provided
-      }
-      // include:{
+      sortBy && sortOrder ? [{ [sortBy]: sortOrder }] : [{ createdAt: "asc" }],
+    select: {
+      id: true,
+      email: true,
+      role: true,
+      needPasswordChange: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+      admin: true,
+      doctor: true,
+      patient: true,
+      // Fallback to 'name' for sorting if not provided
+    },
+    // include:{
 
-      // }
-  }
-);
+    // }
+  });
   const total = await prisma.user.count({ where: whereConditions });
   return {
     meta: {
@@ -149,9 +148,14 @@ const getAllUserFromDB = async (params: any, options: IPaginationOptions) => {
     data: result,
   };
 };
+
+const updateUserServiceIntoDB = () => {
+  console.log("update user Data");
+};
 export const UserServices = {
   createAdmin,
   createDoctorIntoDB,
   createPatientIntoDB,
   getAllUserFromDB,
+  updateUserServiceIntoDB,
 };
