@@ -149,7 +149,7 @@ const getAllUserFromDB = async (params: any, options: IPaginationOptions) => {
   };
 };
 
-const updateUserServiceIntoDB = () => {
+const updateUserServiceIntoDB = (id:string,payload:any) => {
   console.log("update user Data");
 };
 export const UserServices = {

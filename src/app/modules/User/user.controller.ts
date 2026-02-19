@@ -70,14 +70,19 @@ const getAllUser = catchAsync(async (req, res, next) => {
   });
 });
 const updateUserData = catchAsync(async (req, res, next) => {
-  const result = await UserServices.updateUserServiceIntoDB();
+  const result = await UserServices.updateUserServiceIntoDB(
+    req.params.id as string,
+    req.body
+  );
 
-//   sendResponse(res, 
-//     success: true,
-//     statusCode: status.OK,
-//     message: "User data retrieved successfully",
-//   });
+  sendResponse(res, {
+    success: true,
+    statusCode: status.OK,
+    message: "User data updated successfully",
+    data: result,
+  });
 });
+
 
 export const UserController = {
   createAdminUser,
