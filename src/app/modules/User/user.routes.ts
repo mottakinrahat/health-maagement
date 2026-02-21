@@ -39,7 +39,7 @@ router.post(
     req.body = UserValidation.createPatientValidationSchema.parse(
       JSON.parse(req.body.data),
     );
-    return UserController.createPatient(req, res);
+    return UserController.createPatient(req, res);  //controller for creating patient
   },
 ); //
 router.get(
