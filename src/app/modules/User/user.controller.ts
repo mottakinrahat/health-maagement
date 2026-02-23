@@ -69,8 +69,9 @@ const getAllUser = catchAsync(async (req, res, next) => {
     data: result?.data,
   });
 });
-const updateUserData = catchAsync(async (req, res, next) => {
-  const result = await UserServices.updateUserServiceIntoDB(
+const changeProfileStatus = catchAsync(async (req, res) => {
+  console.log(req.body);
+  const result = await UserServices.changeProfileStatus(
     req.params.id as string,
     req.body
   );
@@ -82,6 +83,19 @@ const updateUserData = catchAsync(async (req, res, next) => {
     data: result,
   });
 });
+const getMyProfile = catchAsync(async (req, res) => {
+
+  const result = await UserServices.getMyProfile(req?.user
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: status.OK,
+    message: "profile retrieved successfully",
+    data: result,
+  });
+});
+
 
 
 export const UserController = {
@@ -89,5 +103,5 @@ export const UserController = {
   createDoctor,
   createPatient,
   getAllUser,
-  updateUserData,
+  changeProfileStatus,getMyProfile
 };

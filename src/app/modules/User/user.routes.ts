@@ -9,6 +9,11 @@ import { UserValidation } from "./user.validation";
 
 const router = express.Router();
 
+router.get(
+  "/me",
+  auth(UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT),
+  UserController.getMyProfile,
+);
 router.post(
   "/create-admin",
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
@@ -39,13 +44,18 @@ router.post(
     req.body = UserValidation.createPatientValidationSchema.parse(
       JSON.parse(req.body.data),
     );
-    return UserController.createPatient(req, res);  //controller for creating patient
+    return UserController.createPatient(req, res); //controller for creating patient
   },
 ); //
 router.get(
-  "/",auth(UserRole.SUPER_ADMIN,UserRole.ADMIN),
+  "/",
+  auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
   UserController.getAllUser,
 );
 
-router.patch('/:id',UserController.updateUserData)
+router.patch(
+  "/:id/status",
+  auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
+  UserController.changeProfileStatus,
+);
 export const userRoutes = router;
