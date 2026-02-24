@@ -167,7 +167,7 @@ const getMyProfile = async (user:any) => {
 
 const userInfo=await prisma.user.findUnique({ //find unique
   where:{
-    email:user.email
+    email:user.email    //checked by email
   },
   select:{
     email:true,
