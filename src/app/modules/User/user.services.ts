@@ -160,7 +160,7 @@ const changeProfileStatus = async (id:string,status:UserRole) => {
   },
   data:status
  })
- return updateUserData;
+ return updateUserData;           //update Data
 };
 
 const getMyProfile = async (user:any) => {
