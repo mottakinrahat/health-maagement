@@ -1,9 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import { UserController } from "./user.controller";
 import { auth } from "../../middleWares/auth";
-import { UserRole } from "../../../../generated/prisma";
-import multer from "multer";
-import path from "path";
+import { UserRole } from "../../../../prisma/generated/prisma";
 import { fileUploader } from "../../../helpers/fileUploader";
 import { UserValidation } from "./user.validation";
 
@@ -16,7 +14,7 @@ router.get(
 );
 router.post(
   "/create-admin",
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  
   fileUploader.upload.single("file"),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = UserValidation.createAdminValidation.parse(

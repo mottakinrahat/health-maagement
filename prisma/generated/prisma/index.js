@@ -198,7 +198,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "E:\\coding\\practice-prisma\\prisma\\generated\\prisma",
+      "value": "C:\\Codeeeee\\coding\\health-maagement\\prisma\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -212,7 +212,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "E:\\coding\\practice-prisma\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Codeeeee\\coding\\health-maagement\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -226,6 +226,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {

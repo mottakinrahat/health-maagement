@@ -1,11 +1,9 @@
-
-import { Prisma, PrismaClient, UserRole } from "../../../../generated/prisma";
 import * as bcrypt from "bcrypt";
 import { fileUploader } from "../../../helpers/fileUploader";
 import { IPaginationOptions } from "../../interfaces/pagination";
 import { calculatePagination } from "../../../helpers/paginationHelpers";
 import { userSearchableFields } from "./user.constant";
-import { stat } from "fs";
+import { UserRole,Prisma, PrismaClient } from "../../../../prisma/generated/prisma";
 const prisma = new PrismaClient();
 const createAdmin = async (req: any) => {
   const file = req.file;
@@ -13,6 +11,7 @@ const createAdmin = async (req: any) => {
     const uploadToCloudinary = await fileUploader.uploadToCloudinary(
       file?.path,
     );
+    console.log(uploadToCloudinary)
     req.body.admin.profilePhoto = uploadToCloudinary?.url;
   }
   const hashedPassword: string = await bcrypt.hash(req.body.password, 12);
@@ -21,6 +20,7 @@ const createAdmin = async (req: any) => {
     password: hashedPassword,
     role: UserRole.ADMIN,
   };
+  console.log(userData)
   const result = await prisma.$transaction(async (transactionClient: any) => {
     await transactionClient.user.create({
       data: userData,

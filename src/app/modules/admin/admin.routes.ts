@@ -3,7 +3,8 @@ import { AdminController } from "./admin.controller";
 import validateRequest from "../../middleWares/validateRequest";
 import { AdminValidation } from "./admin.validation";
 import { auth } from "../../middleWares/auth";
-import { UserRole } from "../../../../generated/prisma";
+import { UserRole } from "../../../../prisma/generated/prisma";
+
 const router = express.Router();
 
 

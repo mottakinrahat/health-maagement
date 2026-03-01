@@ -1,13 +1,11 @@
-import { UserRole } from "./../../../../generated/prisma/index.d";
-
 import generateToken, { verifyToken } from "../../../helpers/jwtHelpers";
 import prisma from "../../../shared/prisma";
 import { TLogInUser } from "./auth.interface";
 import bcrypt from "bcrypt";
-import { UserStatus } from "../../../../generated/prisma";
 import { Secret } from "jsonwebtoken";
 import config from "../../../config";
 import emailSender from "./emailSender";
+import { UserStatus } from "../../../../prisma/generated/prisma";
 
 const loginUser = async (payload: TLogInUser) => {
   const { email, password } = payload;
