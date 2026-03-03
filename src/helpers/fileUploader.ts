@@ -17,9 +17,8 @@ const upload = multer({ storage });
 cloudinary.config({
   cloud_name: "dse4w3es9",
   api_key: "954471851851321",
-  api_secret: process.env.CLOUDINARY_API_SECRET!,
+  api_secret:'YBC7g1ISjyateAnTE3XtYEY4xXk'
 });
-
 const uploadToCloudinary = async (filePath: string) => {
   try {
     const result = await cloudinary.uploader.upload(filePath, {

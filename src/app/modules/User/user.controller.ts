@@ -17,7 +17,7 @@ const createAdminUser = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: "Failed to create admin user",
+      message: "Failed to create admin user", //failed
       error: error,
     });
   }
@@ -73,7 +73,7 @@ const changeProfileStatus = catchAsync(async (req, res) => {
   console.log(req.body);
   const result = await UserServices.changeProfileStatus(
     req.params.id as string,
-    req.body
+    req.body,
   );
 
   sendResponse(res, {
@@ -84,9 +84,7 @@ const changeProfileStatus = catchAsync(async (req, res) => {
   });
 });
 const getMyProfile = catchAsync(async (req, res) => {
-
-  const result = await UserServices.getMyProfile(req?.user
-  );
+  const result = await UserServices.getMyProfile(req?.user);
 
   sendResponse(res, {
     success: true,
@@ -96,12 +94,27 @@ const getMyProfile = catchAsync(async (req, res) => {
   });
 });
 
+const updateMyProfile = catchAsync(async (req, res) => {
+ const user = (req as any).user;
+  const result = await UserServices.updateMyProfile(
+    user,
+    req.body,
+  );
 
+  sendResponse(res, {
+    success: true,
+    statusCode: status.OK,
+    message: "User data updated successfully",
+    data: result,
+  });
+});
 
 export const UserController = {
   createAdminUser,
   createDoctor,
   createPatient,
   getAllUser,
-  changeProfileStatus,getMyProfile
+  changeProfileStatus,
+  getMyProfile,
+  updateMyProfile,
 };

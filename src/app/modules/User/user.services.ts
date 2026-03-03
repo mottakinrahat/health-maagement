@@ -3,24 +3,30 @@ import { fileUploader } from "../../../helpers/fileUploader";
 import { IPaginationOptions } from "../../interfaces/pagination";
 import { calculatePagination } from "../../../helpers/paginationHelpers";
 import { userSearchableFields } from "./user.constant";
-import { UserRole,Prisma, PrismaClient } from "../../../../prisma/generated/prisma";
+import {
+  UserRole,
+  Prisma,
+  PrismaClient,
+} from "../../../../prisma/generated/prisma";
 const prisma = new PrismaClient();
 const createAdmin = async (req: any) => {
   const file = req.file;
+  console.log(file.path);
   if (file) {
     const uploadToCloudinary = await fileUploader.uploadToCloudinary(
       file?.path,
     );
-    console.log(uploadToCloudinary)
+    console.log(uploadToCloudinary);
     req.body.admin.profilePhoto = uploadToCloudinary?.url;
   }
   const hashedPassword: string = await bcrypt.hash(req.body.password, 12);
+  console.log(hashedPassword);
   const userData = {
     email: req.body.admin.email,
     password: hashedPassword,
     role: UserRole.ADMIN,
   };
-  console.log(userData)
+  console.log(userData);
   const result = await prisma.$transaction(async (transactionClient: any) => {
     await transactionClient.user.create({
       data: userData,
@@ -148,71 +154,74 @@ const getAllUserFromDB = async (params: any, options: IPaginationOptions) => {
   };
 };
 
-const changeProfileStatus = async (id:string,status:UserRole) => {
- const userData=await prisma.user.findUniqueOrThrow({
-  where:{
-    id
-  }
- })
- const updateUserData=await prisma.user.update({
-  where:{
-    id
-  },
-  data:status
- })
- return updateUserData;           //update Data
+const changeProfileStatus = async (id: string, status: UserRole) => {
+  const userData = await prisma.user.findUniqueOrThrow({
+    where: {
+      id,
+    },
+  });
+  const updateUserData = await prisma.user.update({
+    where: {
+      id,
+    },
+    data: status,
+  });
+  return updateUserData; //update Data
 };
 
-const getMyProfile = async (user:any) => {
+const getMyProfile = async (user: any) => {
+  const userInfo = await prisma.user.findUnique({
+    //find unique
+    where: {
+      email: user.email, //checked by email
+    },
+    select: {
+      email: true,
+      role: true,
+      id: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+  let profileInfo;
+  if (userInfo?.role === UserRole.SUPER_ADMIN) {
+    profileInfo = await prisma.admin.findUnique({
+      where: {
+        email: userInfo?.email,
+      },
+    });
+  } else if (userInfo?.role === UserRole.ADMIN) {
+    profileInfo = await prisma.admin.findUnique({
+      where: {
+        email: userInfo?.email,
+      },
+    });
+  } else if (userInfo?.role === UserRole.PATIENT) {
+    profileInfo = await prisma.patient.findUnique({
+      where: {
+        email: userInfo?.email,
+      },
+    });
+  } else if (userInfo?.role === UserRole.DOCTOR) {
+    profileInfo = await prisma.doctor.findUnique({
+      where: {
+        email: userInfo?.email,
+      },
+    });
+  }
+  return { ...userInfo, ...profileInfo };
+};
 
-const userInfo=await prisma.user.findUnique({ //find unique
-  where:{
-    email:user.email    //checked by email
-  },
-  select:{
-    email:true,
-    role:true,
-    id:true,
-    status:true,
-    createdAt:true,
-    updatedAt:true
-  }
-})
-let profileInfo;
-if(userInfo?.role===UserRole.SUPER_ADMIN){
- profileInfo=await prisma.admin.findUnique({
-  where:{
-    email:userInfo?.email
-  }
- })
-}
-else if(userInfo?.role===UserRole.ADMIN){
- profileInfo=await prisma.admin.findUnique({
-  where:{
-    email:userInfo?.email
-  }
- })
-}
-else if(userInfo?.role===UserRole.PATIENT){
- profileInfo=await prisma.patient.findUnique({
-  where:{
-    email:userInfo?.email
-  }
- })
-}
-else if(userInfo?.role===UserRole.DOCTOR){
- profileInfo=await prisma.doctor.findUnique({
-  where:{
-    email:userInfo?.email
-  }
- })
-}
-return {...userInfo,...profileInfo};
-}
+const updateMyProfile = async (user:any, payload: any) => {
+  console.log(user, payload);
+};
 export const UserServices = {
   createAdmin,
   createDoctorIntoDB,
   createPatientIntoDB,
   getAllUserFromDB,
-  changeProfileStatus,getMyProfile
+  changeProfileStatus,
+  getMyProfile,
+  updateMyProfile,
 };
