@@ -214,7 +214,43 @@ const getMyProfile = async (user: any) => {
 };
 
 const updateMyProfile = async (user:any, payload: any) => {
-  console.log(user, payload);
+  const userInfo = await prisma.user.findUnique({
+    where:{
+      email: user?.email,
+    }
+  })
+let profileInfo;
+  if (userInfo?.role === UserRole.SUPER_ADMIN) {
+    profileInfo = await prisma.admin.update({
+      where: {
+        email: userInfo?.email,
+      },
+      data: payload,
+    });
+  } else if (userInfo?.role === UserRole.ADMIN) {
+    profileInfo = await prisma.admin.update({
+      where: {
+        email: userInfo?.email,
+      },
+      data: payload,
+    });
+  } else if (userInfo?.role === UserRole.PATIENT) {
+    profileInfo = await prisma.patient.update({
+      where: {
+        email: userInfo?.email,
+      },
+      data: payload,
+    });
+  } else if (userInfo?.role === UserRole.DOCTOR) {
+    profileInfo = await prisma.doctor.update({
+      where: {
+        email: userInfo?.email,
+      },
+      data: payload,
+    });
+  }
+  return {...profileInfo };
+
 };
 export const UserServices = {
   createAdmin,
