@@ -41,23 +41,24 @@ model Admin {
 }
 
 model Doctor {
-  id                 String   @id @default(uuid())
+  id                 String              @id @default(uuid())
   name               String
   profilePhoto       String?
   contactNumber      String
   address            String?
   registrationNumber String
-  experience         Int      @default(0)
+  experience         Int                 @default(0)
   gender             Gender
   appointmentFee     Int
   qualification      String
   currentWorkPlace   String
   designation        String
-  isDeleted          Boolean  @default(false)
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
-  email              String   @unique
-  user               User     @relation(fields: [email], references: [email])
+  isDeleted          Boolean             @default(false)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  email              String              @unique
+  user               User                @relation(fields: [email], references: [email])
+  doctorSpecialties  doctorSpecialties[]
 
   @@map("doctors")
 }
@@ -74,6 +75,25 @@ model Patient {
   updatedAt     DateTime @updatedAt
 
   user User @relation(references: [email], fields: [email])
+}
+
+model Specialties {
+  id                String              @id @default(uuid())
+  name              String              @unique
+  icon              String
+  doctorSpecialties doctorSpecialties[]
+
+  @@map("specialties")
+}
+
+model doctorSpecialties {
+  specialtiesId String
+  doctorId      String
+  doctor        Doctor      @relation(fields: [doctorId], references: [id])
+  specialties   Specialties @relation(fields: [specialtiesId], references: [id])
+
+  @@id([specialtiesId, doctorId])
+  @@map("doctor_specialties")
 }
 
 enum UserRole {

@@ -95,10 +95,9 @@ const getMyProfile = catchAsync(async (req, res) => {
 });
 
 const updateMyProfile = catchAsync(async (req, res) => {
- const user = (req as any).user;
   const result = await UserServices.updateMyProfile(
-    user,
-    req.body,
+    req.user,
+    req,
   );
 
   sendResponse(res, {

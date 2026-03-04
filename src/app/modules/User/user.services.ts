@@ -7,20 +7,19 @@ import {
   UserRole,
   Prisma,
   PrismaClient,
+  UserStatus,
 } from "../../../../prisma/generated/prisma";
 const prisma = new PrismaClient();
 const createAdmin = async (req: any) => {
   const file = req.file;
-  console.log(file.path);
   if (file) {
     const uploadToCloudinary = await fileUploader.uploadToCloudinary(
       file?.path,
     );
-    console.log(uploadToCloudinary);
     req.body.admin.profilePhoto = uploadToCloudinary?.url;
   }
   const hashedPassword: string = await bcrypt.hash(req.body.password, 12);
-  console.log(hashedPassword);
+  
   const userData = {
     email: req.body.admin.email,
     password: hashedPassword,
@@ -213,43 +212,53 @@ const getMyProfile = async (user: any) => {
   return { ...userInfo, ...profileInfo };
 };
 
-const updateMyProfile = async (user:any, payload: any) => {
+const updateMyProfile = async (user:any, req: any) => {
   const userInfo = await prisma.user.findUnique({
     where:{
       email: user?.email,
+      status:UserStatus.ACTIVE
     }
   })
+
+ const file=req.file;
+  if(file){
+    const uploadToCloudinary=await fileUploader.uploadToCloudinary(file?.path);
+    req.body.profilePhoto=uploadToCloudinary?.url;
+  }
+
 let profileInfo;
   if (userInfo?.role === UserRole.SUPER_ADMIN) {
     profileInfo = await prisma.admin.update({
       where: {
         email: userInfo?.email,
       },
-      data: payload,
+      data: req.body,
     });
   } else if (userInfo?.role === UserRole.ADMIN) {
     profileInfo = await prisma.admin.update({
       where: {
         email: userInfo?.email,
       },
-      data: payload,
+      data: req.body,
     });
-  } else if (userInfo?.role === UserRole.PATIENT) {
+  }
+  
+  else if (userInfo?.role === UserRole.PATIENT) {
     profileInfo = await prisma.patient.update({
       where: {
         email: userInfo?.email,
       },
-      data: payload,
+      data: req.body,
     });
   } else if (userInfo?.role === UserRole.DOCTOR) {
     profileInfo = await prisma.doctor.update({
       where: {
         email: userInfo?.email,
       },
-      data: payload,
+      data: req.body,
     });
   }
-  return {...profileInfo };
+  return { ...userInfo, ...profileInfo };
 
 };
 export const UserServices = {
