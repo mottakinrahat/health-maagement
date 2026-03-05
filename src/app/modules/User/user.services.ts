@@ -1,7 +1,6 @@
 import * as bcrypt from "bcrypt";
 import { fileUploader } from "../../../helpers/fileUploader";
 import { IPaginationOptions } from "../../interfaces/pagination";
-import { calculatePagination } from "../../../helpers/paginationHelpers";
 import { userSearchableFields } from "./user.constant";
 import {
   UserRole,
@@ -9,6 +8,7 @@ import {
   PrismaClient,
   UserStatus,
 } from "../../../../prisma/generated/prisma";
+import { paginationHelpers } from "../../../helpers/paginationHelpers";
 const prisma = new PrismaClient();
 const createAdmin = async (req: any) => {
   const file = req.file;
@@ -91,7 +91,7 @@ const createPatientIntoDB = async (req: any) => {
 };
 
 const getAllUserFromDB = async (params: any, options: IPaginationOptions) => {
-  const { page, limit, sortBy, sortOrder, skip } = calculatePagination(options);
+  const { page, limit, sortBy, sortOrder, skip } = paginationHelpers.calculatePagination(options);
   const { searchTerm, ...filterData } = params;
   const andConditions: Prisma.UserWhereInput[] = [];
   console.log(filterData);

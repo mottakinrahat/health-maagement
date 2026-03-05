@@ -1,17 +1,17 @@
-type IOptions={
+type IOptions = {
   page?: number;
   limit?: number;
   sortOrder?: string;
   sortBy?: string;
 }
-type IOptionsReturn={
+type IOptionsReturn = {
   page?: number;
   limit?: number;
   sortOrder?: string;
   skip: number;
   sortBy?: string;
 }
-const calculatePagination = (options:IOptions ):IOptionsReturn => {
+const calculatePagination = (options: IOptions): IOptionsReturn => {
   const page: number = Number(options.page) || 1;
   const limit: number = Number(options.limit) || 10;
   const skip: number = Number((page - 1) * limit);
@@ -25,4 +25,4 @@ const calculatePagination = (options:IOptions ):IOptionsReturn => {
     sortOrder,
   };
 };
-export { calculatePagination };
+export const paginationHelpers = { calculatePagination };
