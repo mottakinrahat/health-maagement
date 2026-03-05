@@ -176,7 +176,7 @@ exports.Prisma.PatientScalarFieldEnum = {
 
 exports.Prisma.SpecialtiesScalarFieldEnum = {
   id: 'id',
-  name: 'name',
+  title: 'title',
   icon: 'icon'
 };
 

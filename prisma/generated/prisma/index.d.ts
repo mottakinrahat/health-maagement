@@ -6059,19 +6059,19 @@ export namespace Prisma {
 
   export type SpecialtiesMinAggregateOutputType = {
     id: string | null
-    name: string | null
+    title: string | null
     icon: string | null
   }
 
   export type SpecialtiesMaxAggregateOutputType = {
     id: string | null
-    name: string | null
+    title: string | null
     icon: string | null
   }
 
   export type SpecialtiesCountAggregateOutputType = {
     id: number
-    name: number
+    title: number
     icon: number
     _all: number
   }
@@ -6079,19 +6079,19 @@ export namespace Prisma {
 
   export type SpecialtiesMinAggregateInputType = {
     id?: true
-    name?: true
+    title?: true
     icon?: true
   }
 
   export type SpecialtiesMaxAggregateInputType = {
     id?: true
-    name?: true
+    title?: true
     icon?: true
   }
 
   export type SpecialtiesCountAggregateInputType = {
     id?: true
-    name?: true
+    title?: true
     icon?: true
     _all?: true
   }
@@ -6170,7 +6170,7 @@ export namespace Prisma {
 
   export type SpecialtiesGroupByOutputType = {
     id: string
-    name: string
+    title: string
     icon: string
     _count: SpecialtiesCountAggregateOutputType | null
     _min: SpecialtiesMinAggregateOutputType | null
@@ -6193,7 +6193,7 @@ export namespace Prisma {
 
   export type SpecialtiesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    name?: boolean
+    title?: boolean
     icon?: boolean
     doctorSpecialties?: boolean | Specialties$doctorSpecialtiesArgs<ExtArgs>
     _count?: boolean | SpecialtiesCountOutputTypeDefaultArgs<ExtArgs>
@@ -6201,23 +6201,23 @@ export namespace Prisma {
 
   export type SpecialtiesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    name?: boolean
+    title?: boolean
     icon?: boolean
   }, ExtArgs["result"]["specialties"]>
 
   export type SpecialtiesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    name?: boolean
+    title?: boolean
     icon?: boolean
   }, ExtArgs["result"]["specialties"]>
 
   export type SpecialtiesSelectScalar = {
     id?: boolean
-    name?: boolean
+    title?: boolean
     icon?: boolean
   }
 
-  export type SpecialtiesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "icon", ExtArgs["result"]["specialties"]>
+  export type SpecialtiesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "icon", ExtArgs["result"]["specialties"]>
   export type SpecialtiesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     doctorSpecialties?: boolean | Specialties$doctorSpecialtiesArgs<ExtArgs>
     _count?: boolean | SpecialtiesCountOutputTypeDefaultArgs<ExtArgs>
@@ -6232,7 +6232,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      name: string
+      title: string
       icon: string
     }, ExtArgs["result"]["specialties"]>
     composites: {}
@@ -6659,7 +6659,7 @@ export namespace Prisma {
    */
   interface SpecialtiesFieldRefs {
     readonly id: FieldRef<"Specialties", 'String'>
-    readonly name: FieldRef<"Specialties", 'String'>
+    readonly title: FieldRef<"Specialties", 'String'>
     readonly icon: FieldRef<"Specialties", 'String'>
   }
     
@@ -8199,7 +8199,7 @@ export namespace Prisma {
 
   export const SpecialtiesScalarFieldEnum: {
     id: 'id',
-    name: 'name',
+    title: 'title',
     icon: 'icon'
   };
 
@@ -8692,31 +8692,31 @@ export namespace Prisma {
     OR?: SpecialtiesWhereInput[]
     NOT?: SpecialtiesWhereInput | SpecialtiesWhereInput[]
     id?: StringFilter<"Specialties"> | string
-    name?: StringFilter<"Specialties"> | string
+    title?: StringFilter<"Specialties"> | string
     icon?: StringFilter<"Specialties"> | string
     doctorSpecialties?: DoctorSpecialtiesListRelationFilter
   }
 
   export type SpecialtiesOrderByWithRelationInput = {
     id?: SortOrder
-    name?: SortOrder
+    title?: SortOrder
     icon?: SortOrder
     doctorSpecialties?: doctorSpecialtiesOrderByRelationAggregateInput
   }
 
   export type SpecialtiesWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    name?: string
+    title?: string
     AND?: SpecialtiesWhereInput | SpecialtiesWhereInput[]
     OR?: SpecialtiesWhereInput[]
     NOT?: SpecialtiesWhereInput | SpecialtiesWhereInput[]
     icon?: StringFilter<"Specialties"> | string
     doctorSpecialties?: DoctorSpecialtiesListRelationFilter
-  }, "id" | "name">
+  }, "id" | "title">
 
   export type SpecialtiesOrderByWithAggregationInput = {
     id?: SortOrder
-    name?: SortOrder
+    title?: SortOrder
     icon?: SortOrder
     _count?: SpecialtiesCountOrderByAggregateInput
     _max?: SpecialtiesMaxOrderByAggregateInput
@@ -8728,7 +8728,7 @@ export namespace Prisma {
     OR?: SpecialtiesScalarWhereWithAggregatesInput[]
     NOT?: SpecialtiesScalarWhereWithAggregatesInput | SpecialtiesScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Specialties"> | string
-    name?: StringWithAggregatesFilter<"Specialties"> | string
+    title?: StringWithAggregatesFilter<"Specialties"> | string
     icon?: StringWithAggregatesFilter<"Specialties"> | string
   }
 
@@ -9162,47 +9162,47 @@ export namespace Prisma {
 
   export type SpecialtiesCreateInput = {
     id?: string
-    name: string
+    title: string
     icon: string
     doctorSpecialties?: doctorSpecialtiesCreateNestedManyWithoutSpecialtiesInput
   }
 
   export type SpecialtiesUncheckedCreateInput = {
     id?: string
-    name: string
+    title: string
     icon: string
     doctorSpecialties?: doctorSpecialtiesUncheckedCreateNestedManyWithoutSpecialtiesInput
   }
 
   export type SpecialtiesUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
     icon?: StringFieldUpdateOperationsInput | string
     doctorSpecialties?: doctorSpecialtiesUpdateManyWithoutSpecialtiesNestedInput
   }
 
   export type SpecialtiesUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
     icon?: StringFieldUpdateOperationsInput | string
     doctorSpecialties?: doctorSpecialtiesUncheckedUpdateManyWithoutSpecialtiesNestedInput
   }
 
   export type SpecialtiesCreateManyInput = {
     id?: string
-    name: string
+    title: string
     icon: string
   }
 
   export type SpecialtiesUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
     icon?: StringFieldUpdateOperationsInput | string
   }
 
   export type SpecialtiesUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
     icon?: StringFieldUpdateOperationsInput | string
   }
 
@@ -9628,19 +9628,19 @@ export namespace Prisma {
 
   export type SpecialtiesCountOrderByAggregateInput = {
     id?: SortOrder
-    name?: SortOrder
+    title?: SortOrder
     icon?: SortOrder
   }
 
   export type SpecialtiesMaxOrderByAggregateInput = {
     id?: SortOrder
-    name?: SortOrder
+    title?: SortOrder
     icon?: SortOrder
   }
 
   export type SpecialtiesMinOrderByAggregateInput = {
     id?: SortOrder
-    name?: SortOrder
+    title?: SortOrder
     icon?: SortOrder
   }
 
@@ -10693,13 +10693,13 @@ export namespace Prisma {
 
   export type SpecialtiesCreateWithoutDoctorSpecialtiesInput = {
     id?: string
-    name: string
+    title: string
     icon: string
   }
 
   export type SpecialtiesUncheckedCreateWithoutDoctorSpecialtiesInput = {
     id?: string
-    name: string
+    title: string
     icon: string
   }
 
@@ -10770,13 +10770,13 @@ export namespace Prisma {
 
   export type SpecialtiesUpdateWithoutDoctorSpecialtiesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
     icon?: StringFieldUpdateOperationsInput | string
   }
 
   export type SpecialtiesUncheckedUpdateWithoutDoctorSpecialtiesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
     icon?: StringFieldUpdateOperationsInput | string
   }
 

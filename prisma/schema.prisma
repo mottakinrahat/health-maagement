@@ -79,7 +79,7 @@ model Patient {
 
 model Specialties {
   id                String              @id @default(uuid())
-  name              String              @unique
+  title              String              @unique
   icon              String
   doctorSpecialties doctorSpecialties[]
 
