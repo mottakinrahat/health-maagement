@@ -128,24 +128,23 @@ const updateIntoDB = async (id: string, payload: IDoctorUpdate) => {
         if (specialties && specialties.length > 0) {
             // delete specialties
             const deleteSpecialtiesIds = specialties.filter(specialty => specialty.isDeleted);
-            //console.log(deleteSpecialtiesIds)
+            console.log(deleteSpecialtiesIds)
             for (const specialty of deleteSpecialtiesIds) {
                 await transactionClient.doctorSpecialties.deleteMany({
                     where: {
                         doctorId: doctorInfo.id,
-                        specialitiesId: specialty.specialtiesId
+                        specialtiesId: specialty.specialtiesId
                     }
                 });
             }
 
             // create specialties
             const createSpecialtiesIds = specialties.filter(specialty => !specialty.isDeleted);
-            console.log(createSpecialtiesIds)
             for (const specialty of createSpecialtiesIds) {
                 await transactionClient.doctorSpecialties.create({
                     data: {
                         doctorId: doctorInfo.id,
-                        specialitiesId: specialty.specialtiesId
+                        specialtiesId: specialty.specialtiesId
                     }
                 });
             }
