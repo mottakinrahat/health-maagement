@@ -5,32 +5,35 @@ import status from "http-status";
 import { pick } from "../../../shared/pick";
 import { ScheduleService } from "./schedule.service";
 
-
 const inserIntoDB = catchAsync(async (req: Request, res: Response) => {
-    const result = await ScheduleService.inserIntoDB(req.body);
+  const result = await ScheduleService.inserIntoDB(req.body);
 
-    sendResponse(res, {
-        statusCode: status.OK,
-        success: true,
-        message: "Schedule created successfully!",
-        data: result
-    });
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "Schedule created successfully!",
+    data: result,
+  });
 });
 
-// const getAllFromDB = catchAsync(async (req: Request & { user?: IAuthUser }, res: Response) => {
-//     const filters = pick(req.query, ['startDate', 'endDate']);
-//     const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
+const getAllFromDB = catchAsync(
+  async (req: Request & { user?: any }, res: Response) => {
+    const filters = pick(req.query, ["startDate", "endDate"]);
+    const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
 
-//     const user = req.user;
-//     const result = await ScheduleService.getAllFromDB(filters, options, user as IAuthUser);
+    const result = await ScheduleService.getAllFromDB(
+      filters,
+      options,
+    );
 
-//     sendResponse(res, {
-//         statusCode: status.OK,
-//         success: true,
-//         message: "Schedule fetched successfully!",
-//         data: result
-//     });
-// });
+    sendResponse(res, {
+      statusCode: status.OK,
+      success: true,
+      message: "Schedule fetched successfully!",
+      data: result,
+    });
+  },
+);
 
 // const getByIdFromDB = catchAsync(async (req: Request, res: Response) => {
 //     const { id } = req.params;
@@ -54,10 +57,9 @@ const inserIntoDB = catchAsync(async (req: Request, res: Response) => {
 //     });
 // });
 
-
 export const ScheduleController = {
-    inserIntoDB,
-    // getAllFromDB,
-    // getByIdFromDB,
-    // deleteFromDB
+  inserIntoDB,
+  getAllFromDB,
+  // getByIdFromDB,
+  // deleteFromDB
 };
