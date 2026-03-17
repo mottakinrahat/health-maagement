@@ -25,7 +25,7 @@ const initPayment = async () => {
         cus_country: 'Bangladesh',
         cus_phone: '01711111111',
         cus_fax: '01711111111',
-        ship_name: 'Customer Name',
+        ship_name: 'Customer Name',// customer name need to add
         ship_add1: 'Dhaka',
         ship_add2: 'Dhaka',
         ship_city: 'Dhaka', //city info
