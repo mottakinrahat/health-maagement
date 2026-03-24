@@ -8,7 +8,7 @@ import { Doctor, UserStatus } from "../../../../prisma/generated/prisma";
 
 const getAllFromDB = async (
     filters: IDoctorFilterRequest,
-    options: IPaginationOptions,
+    options: IPaginationOptions,   //add pagination
 ) => {
     const { limit, page, skip } = paginationHelpers.calculatePagination(options);
     const { searchTerm, specialties, ...filterData } = filters;
