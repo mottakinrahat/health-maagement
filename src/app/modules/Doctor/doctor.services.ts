@@ -16,7 +16,7 @@ const getAllFromDB = async (
     const andConditions: Prisma.DoctorWhereInput[] = [];
 
     if (searchTerm) {
-        andConditions.push({
+        andConditions.push({   //andCondition
             OR: doctorSearchableFields.map(field => ({
                 [field]: {
                     contains: searchTerm,
