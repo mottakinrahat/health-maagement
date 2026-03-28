@@ -151,7 +151,7 @@ const updateIntoDB = async (id: string, payload: IDoctorUpdate) => {
         }
     })
 
-    const result = await prisma.doctor.findUnique({
+    const result = await prisma.doctor.findUnique({  //this is for find unique doctor
         where: {
             id: doctorInfo.id
         },
