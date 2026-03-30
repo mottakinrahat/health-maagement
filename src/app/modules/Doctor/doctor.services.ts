@@ -1,10 +1,9 @@
-import {  Prisma } from "@prisma/client";
+import { Prisma, Doctor, UserStatus } from "../../../../prisma/generated/prisma";
 import prisma from "../../../shared/prisma";
 import { IPaginationOptions } from "../../interfaces/pagination";
 import { IDoctorFilterRequest, IDoctorUpdate } from "./doctor.interface";
 import { doctorSearchableFields } from "./doctor.constants";
 import { paginationHelpers } from "../../../helpers/paginationHelpers";
-import { Doctor, UserStatus } from "../../../../prisma/generated/prisma";
 
 const getAllFromDB = async (
     filters: IDoctorFilterRequest,
@@ -35,7 +34,7 @@ const getAllFromDB = async (
                     specialities: {
                         title: {
                             contains: specialties,
-                            mode: 'insensitive'
+                            mode: 'insensitive' //for
                         }
                     }
                 }
