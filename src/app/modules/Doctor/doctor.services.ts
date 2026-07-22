@@ -31,10 +31,10 @@ const getAllFromDB = async (
         andConditions.push({
             doctorSpecialties: {
                 some: {
-                    specialities: { //ddfdsf
+                    specialties: {
                         title: {
                             contains: specialties,
-                            mode: 'insensitive' //for
+                            mode: 'insensitive'
                         }
                     }
                 }

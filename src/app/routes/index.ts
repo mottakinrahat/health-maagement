@@ -7,45 +7,28 @@ import { DoctorRoutes } from "../modules/Doctor/doctor.routes";
 import { PatientRoutes } from "../../patient/patient.routes";
 import { ScheduleRoutes } from "../modules/schedule/schedule.routes";
 import { DoctorScheduleRoutes } from "../modules/doctorSchedule/doctorSchedule.route";
+import { AppointmentRoutes } from "../modules/appointment/appointment.routes";
+import { PaymentRoutes } from "../modules/payment/payment.route";
+import { PrescriptionRoutes } from "../modules/prescription/prescription.routes";
+import { DashboardRoutes } from "../modules/dashboard/dashboard.routes";
 
 const router = express.Router();
 
-const moduleRouter = [
-  {
-    path: "/user",
-    route: userRoutes,
-  },
-  {
-    path: "/admins",
-    route: adminRoutes,
-  },
-  {
-    path: "/auth",
-    route: authRoutes,
-  },
-  {
-    path: "/specialties",
-    route: specialtiesRoutes,
-  },
-  {
-    path: "/doctor",
-    route: DoctorRoutes,
-  },
-  {
-    path: "/patient",
-    route: PatientRoutes,
-  },
-  {
-    path: "/schedule",
-    route: ScheduleRoutes,
-  },
-   {
-    path: "/doctor-schedule",
-    route: DoctorScheduleRoutes,
-  },
+const moduleRoutes = [
+  { path: "/user", route: userRoutes },
+  { path: "/admins", route: adminRoutes },
+  { path: "/auth", route: authRoutes },
+  { path: "/specialties", route: specialtiesRoutes },
+  { path: "/doctor", route: DoctorRoutes },
+  { path: "/patient", route: PatientRoutes },
+  { path: "/schedule", route: ScheduleRoutes },
+  { path: "/doctor-schedule", route: DoctorScheduleRoutes },
+  { path: "/appointment", route: AppointmentRoutes },
+  { path: "/payment", route: PaymentRoutes },
+  { path: "/prescription", route: PrescriptionRoutes },
+  { path: "/dashboard", route: DashboardRoutes },
 ];
- 
 
-moduleRouter.forEach((route) => router.use(route.path, route.route));
+moduleRoutes.forEach((route) => router.use(route.path, route.route));
 
 export default router;
