@@ -1,0 +1,6 @@
+[submodule "health-maagement"]
+	path = health-maagement
+	url = https://github.com/mottakinrahat/health-maagement.git
+[submodule "digital-hospital-frontend"]
+	path = digital-hospital-frontend
+	url = https://github.com/mottakinrahat/digital-hospital-frontend.git
