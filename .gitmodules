@@ -4,3 +4,9 @@
 [submodule "digital-hospital-frontend"]
 	path = digital-hospital-frontend
 	url = https://github.com/mottakinrahat/digital-hospital-frontend.git
+[submodule "backend"]
+	path = backend
+	url = https://github.com/mottakinrahat/health-maagement.git
+[submodule "frontend"]
+	path = frontend
+	url = https://github.com/mottakinrahat/digital-hospital-frontend.git
