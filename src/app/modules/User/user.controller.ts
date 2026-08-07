@@ -6,54 +6,35 @@ import { pick } from "../../../shared/pick";
 import { userFilterableFields } from "./user.constant";
 import status from "http-status";
 
-const createAdminUser = async (req: Request, res: Response) => {
-  try {
-    const result = await UserServices.createAdmin(req);
-    res.status(200).json({
-      success: true,
-      message: "Admin user created successfully",
-      data: result,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Failed to create admin user", //failed
-      error: error,
-    });
-  }
-};
-const createDoctor = async (req: Request, res: Response) => {
-  try {
-    const result = await UserServices.createDoctorIntoDB(req);
-    res.status(200).json({
-      success: true,
-      message: "Doctor created successfully",
-      data: result,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Failed to create Doctor",
-      error: error,
-    });
-  }
-};
-const createPatient = async (req: Request, res: Response) => {
-  try {
-    const result = await UserServices.createPatientIntoDB(req);
-    res.status(200).json({
-      success: true,
-      message: "Patient created successfully",
-      data: result,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Failed to create Patient",
-      error: error,
-    });
-  }
-};
+const createAdminUser = catchAsync(async (req: Request, res: Response) => {
+  const result = await UserServices.createAdmin(req);
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "Admin user created successfully",
+    data: result,
+  });
+});
+
+const createDoctor = catchAsync(async (req: Request, res: Response) => {
+  const result = await UserServices.createDoctorIntoDB(req);
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "Doctor created successfully",
+    data: result,
+  });
+});
+
+const createPatient = catchAsync(async (req: Request, res: Response) => {
+  const result = await UserServices.createPatientIntoDB(req);
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "Patient created successfully",
+    data: result,
+  });
+});
 
 const getAllUser = catchAsync(async (req, res, next) => {
   const filter = pick(req.query, userFilterableFields);
@@ -84,7 +65,7 @@ const changeProfileStatus = catchAsync(async (req, res) => {
   });
 });
 const getMyProfile = catchAsync(async (req, res) => {
-  const result = await UserServices.getMyProfile(req?.user);
+  const result = await UserServices.getMyProfile((req as any)?.user);
 
   sendResponse(res, {
     success: true,
@@ -96,7 +77,7 @@ const getMyProfile = catchAsync(async (req, res) => {
 
 const updateMyProfile = catchAsync(async (req, res) => {
   const result = await UserServices.updateMyProfile(
-    req.user,
+    (req as any).user,
     req,
   );
 

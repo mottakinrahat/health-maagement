@@ -51,15 +51,63 @@ const createDoctorIntoDB = async (req: any) => {
     password: hashedPassword,
     role: UserRole.DOCTOR,
   };
-  const result = await prisma.$transaction(async (transactionClient: any) => {
-    await transactionClient.user.create({
-      data: userData,
-    });
-    const createdDoctorData = await transactionClient.doctor.create({
-      data: req.body.doctor,
-    });
-    return createdDoctorData;
-  });
+
+  const { specialtiesId, specialties, ...doctorData } = req.body.doctor;
+
+  const result = await prisma.$transaction(
+    async (transactionClient: any) => {
+      await transactionClient.user.create({
+        data: userData,
+      });
+      const createdDoctorData = await transactionClient.doctor.create({
+        data: doctorData,
+      });
+
+      const targetSpecialties = specialtiesId || specialties;
+      if (targetSpecialties) {
+        if (Array.isArray(targetSpecialties)) {
+          const upsertPromises = targetSpecialties.map((item: any) => {
+            const specId = typeof item === "string" ? item : item?.specialtiesId;
+            if (!specId) return Promise.resolve();
+            return transactionClient.doctorSpecialties.upsert({
+              where: {
+                specialtiesId_doctorId: {
+                  doctorId: createdDoctorData.id,
+                  specialtiesId: specId,
+                },
+              },
+              create: {
+                doctorId: createdDoctorData.id,
+                specialtiesId: specId,
+              },
+              update: {},
+            });
+          });
+          await Promise.all(upsertPromises);
+        } else if (typeof targetSpecialties === "string") {
+          await transactionClient.doctorSpecialties.upsert({
+            where: {
+              specialtiesId_doctorId: {
+                doctorId: createdDoctorData.id,
+                specialtiesId: targetSpecialties,
+              },
+            },
+            create: {
+              doctorId: createdDoctorData.id,
+              specialtiesId: targetSpecialties,
+            },
+            update: {},
+          });
+        }
+      }
+
+      return createdDoctorData;
+    },
+    {
+      maxWait: 10000,
+      timeout: 20000,
+    }
+  );
   return result;
 };
 
@@ -82,7 +130,7 @@ const createPatientIntoDB = async (req: any) => {
     await transactionClient.user.create({
       data: userData,
     });
-    const createdPatientData = await transactionClient.Patient.create({
+    const createdPatientData = await transactionClient.patient.create({
       data: req.body.patient,
     });
     return createdPatientData;

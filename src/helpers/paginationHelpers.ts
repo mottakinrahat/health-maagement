@@ -11,7 +11,7 @@ type IOptionsReturn = {
   skip: number;
   sortBy?: string;
 }
-const calculatePagination = (options: IOptions): IOptionsReturn => {
+export const calculatePagination = (options: IOptions): IOptionsReturn => {
   const page: number = Number(options.page) || 1;
   const limit: number = Number(options.limit) || 10;
   const skip: number = Number((page - 1) * limit);

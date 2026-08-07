@@ -6,7 +6,7 @@ import status from "http-status";
 
 const initiatePayment = catchAsync(async (req: Request, res: Response) => {
   const result = await PaymentService.initiatePayment(
-    req.params.appointmentId,
+    req.params.appointmentId as string,
     (req as any).user
   );
   sendResponse(res, {

@@ -45,6 +45,9 @@ const createDoctorValidationSchema = z.object({
     designation: z.string().min(1, "Designation is required"),
 
     email: z.string().email("Invalid email address"),
+
+    specialtiesId: z.union([z.array(z.string()), z.string()]).optional(),
+    specialties: z.union([z.array(z.string()), z.array(z.object({ specialtiesId: z.string() })), z.string()]).optional(),
   }),
 });
 

@@ -40,7 +40,7 @@ const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deleteFromDB = catchAsync(async (req: Request & { user?: any }, res: Response) => {
-  const result = await DoctorScheduleService.deleteFromDB(req.user, req.params.scheduleId);
+  const result = await DoctorScheduleService.deleteFromDB(req.user, req.params.scheduleId as string);
   sendResponse(res, {
     statusCode: status.OK,
     success: true,

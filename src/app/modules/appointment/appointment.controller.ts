@@ -58,7 +58,7 @@ const getMyAppointments = catchAsync(async (req: Request, res: Response) => {
 const updateStatus = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await AppointmentService.updateStatus(
-    id,
+    id as string,
     req.body.status,
     (req as any).user
   );
@@ -72,7 +72,7 @@ const updateStatus = catchAsync(async (req: Request, res: Response) => {
 
 const cancelAppointment = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await AppointmentService.cancelAppointment(id);
+  const result = await AppointmentService.cancelAppointment(id as string);
   sendResponse(res, {
     statusCode: status.OK,
     success: true,

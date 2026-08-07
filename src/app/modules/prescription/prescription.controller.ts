@@ -34,7 +34,7 @@ const getMyPrescriptions = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getById = catchAsync(async (req: Request, res: Response) => {
-  const result = await PrescriptionService.getById(req.params.id);
+  const result = await PrescriptionService.getById(req.params.id as string);
   sendResponse(res, {
     statusCode: status.OK,
     success: true,

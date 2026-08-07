@@ -4,6 +4,8 @@ import { fileUploader } from "../../../helpers/fileUploader";
 import { specialtiesValidation } from "./specialties.validation";
 const router = express.Router();
 
+router.get("/", specialtiesController.getAllSpecialties);
+
 router.post(
   "/createSpecialties",
   fileUploader.upload.single("file"),
@@ -12,4 +14,7 @@ router.post(
     return specialtiesController.createSpecialties(req, res, next);
   },
 );
+
+router.delete("/:id", specialtiesController.deleteSpecialty);
+
 export const specialtiesRoutes = router;

@@ -1,4 +1,4 @@
-import { BloodGroup, Gender, MaritalStatus } from "@prisma/client";
+import { BloodGroup, Gender, MaritalStatus } from "../../prisma/generated/prisma";
 
 export type IPatientFilterRequest = {
   searchTerm?: string | undefined;

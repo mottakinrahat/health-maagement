@@ -31,12 +31,22 @@ const getAllFromDB = async (
         andConditions.push({
             doctorSpecialties: {
                 some: {
-                    specialties: {
-                        title: {
-                            contains: specialties,
-                            mode: 'insensitive'
+                    OR: [
+                        { specialtiesId: specialties },
+                        {
+                            specialties: {
+                                id: specialties
+                            }
+                        },
+                        {
+                            specialties: {
+                                title: {
+                                    contains: specialties,
+                                    mode: 'insensitive'
+                                }
+                            }
                         }
-                    }
+                    ]
                 }
             }
         })
@@ -116,39 +126,60 @@ const updateIntoDB = async (id: string, payload: IDoctorUpdate) => {
         }
     });
 
-    await prisma.$transaction(async (transactionClient) => {
-        await transactionClient.doctor.update({
-            where: {
-                id
-            },
-            data: doctorData
-        });
+    await prisma.$transaction(
+        async (transactionClient) => {
+            await transactionClient.doctor.update({
+                where: {
+                    id
+                },
+                data: doctorData
+            });
 
-        if (specialties && specialties.length > 0) {
-            // delete specialties
-            const deleteSpecialtiesIds = specialties.filter(specialty => specialty.isDeleted);
-            console.log(deleteSpecialtiesIds)
-            for (const specialty of deleteSpecialtiesIds) {
-                await transactionClient.doctorSpecialties.deleteMany({
-                    where: {
-                        doctorId: doctorInfo.id,
-                        specialtiesId: specialty.specialtiesId
-                    }
-                });
-            }
+            if (specialties && specialties.length > 0) {
+                // Bulk delete specialties marked with isDeleted
+                const deleteSpecialtiesIds = specialties
+                    .filter((specialty: any) => specialty.isDeleted)
+                    .map((specialty: any) => typeof specialty === "string" ? specialty : specialty.specialtiesId)
+                    .filter(Boolean);
 
-            // create specialties
-            const createSpecialtiesIds = specialties.filter(specialty => !specialty.isDeleted);
-            for (const specialty of createSpecialtiesIds) {
-                await transactionClient.doctorSpecialties.create({
-                    data: {
-                        doctorId: doctorInfo.id,
-                        specialtiesId: specialty.specialtiesId
-                    }
+                if (deleteSpecialtiesIds.length > 0) {
+                    await transactionClient.doctorSpecialties.deleteMany({
+                        where: {
+                            doctorId: doctorInfo.id,
+                            specialtiesId: {
+                                in: deleteSpecialtiesIds
+                            }
+                        }
+                    });
+                }
+
+                // Parallel upsert for active specialties
+                const createSpecialtiesIds = specialties.filter((specialty: any) => !specialty.isDeleted);
+                const upsertPromises = createSpecialtiesIds.map((specialty: any) => {
+                    const specId = typeof specialty === "string" ? specialty : specialty.specialtiesId;
+                    if (!specId) return Promise.resolve();
+                    return transactionClient.doctorSpecialties.upsert({
+                        where: {
+                            specialtiesId_doctorId: {
+                                doctorId: doctorInfo.id,
+                                specialtiesId: specId
+                            }
+                        },
+                        create: {
+                            doctorId: doctorInfo.id,
+                            specialtiesId: specId
+                        },
+                        update: {}
+                    });
                 });
+                await Promise.all(upsertPromises);
             }
+        },
+        {
+            maxWait: 10000,
+            timeout: 20000
         }
-    })
+    );
 
     const result = await prisma.doctor.findUnique({  //this is for find unique doctor
         where: {
