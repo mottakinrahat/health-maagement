@@ -28,8 +28,9 @@ const getMySchedules = catchAsync(async (req: Request & { user?: any }, res: Res
 });
 
 const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, ["doctorId", "isBooked"]);
   const options = pick(req.query, ["limit", "page", "sortBy", "sortOrder"]);
-  const result = await DoctorScheduleService.getAllFromDB(options);
+  const result = await DoctorScheduleService.getAllFromDB(filters, options);
   sendResponse(res, {
     statusCode: status.OK,
     success: true,

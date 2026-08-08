@@ -36,16 +36,26 @@ const getMySchedules = async (user: any, options: IPaginationOptions) => {
   return { meta: { total, page, limit }, data: result };
 };
 
-const getAllFromDB = async (options: IPaginationOptions) => {
+const getAllFromDB = async (
+  filters: { doctorId?: string; isBooked?: boolean },
+  options: IPaginationOptions
+) => {
   const { limit, page, skip } = paginationHelpers.calculatePagination(options);
 
+  const whereConditions: any = {};
+  if (filters.doctorId) whereConditions.doctorId = filters.doctorId;
+  if (filters.isBooked !== undefined) {
+    whereConditions.isBooked = filters.isBooked === true || (filters.isBooked as any) === "true";
+  }
+
   const result = await prisma.doctorSchedules.findMany({
+    where: whereConditions,
     skip,
     take: limit,
     include: { doctor: true, schedule: true },
   });
 
-  const total = await prisma.doctorSchedules.count();
+  const total = await prisma.doctorSchedules.count({ where: whereConditions });
 
   return { meta: { total, page, limit }, data: result };
 };
